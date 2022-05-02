@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * SugarCRM Community Edition is a customer relationship management program developed by
@@ -216,11 +217,13 @@ class SugarView
         }
 
         // We have to update jsAlerts as soon as possible
-        if (!isset($_SESSION['isMobile']) &&
+        if (
+            !isset($_SESSION['isMobile']) &&
             ($this instanceof ViewList || $this instanceof ViewDetail || $this instanceof ViewEdit)
         ) {
-            if (isset($_SESSION['alerts_output']) && isset($_SESSION['alerts_output_timestamp']) &&
-                $_SESSION['alerts_output_timestamp'] >= (date('U')-60)
+            if (
+                isset($_SESSION['alerts_output']) && isset($_SESSION['alerts_output_timestamp']) &&
+                $_SESSION['alerts_output_timestamp'] >= (date('U') - 60)
             ) {
                 echo $_SESSION['alerts_output'];
             } else {
@@ -500,7 +503,7 @@ class SugarView
         foreach ($global_control_links as $key => $value) {
             if ($key == 'users') {   //represents logout link.
                 $ss->assign("LOGOUT_LINK", $value['linkinfo'][key($value['linkinfo'])]);
-                $ss->assign("LOGOUT_LABEL", key($value['linkinfo']));//key value for first element.
+                $ss->assign("LOGOUT_LABEL", key($value['linkinfo'])); //key value for first element.
                 continue;
             }
 
@@ -711,10 +714,11 @@ class SugarView
             }
 
             foreach ($groupTabs as $key => $tabGroup) {
-                if (count($topTabs) >= $max_tabs - 1 && $key !== $app_strings['LBL_TABGROUP_ALL'] && in_array(
-                    $tabGroup['modules'][$moduleTab],
-                    $tabGroup['extra']
-                )
+                if (
+                    count($topTabs) >= $max_tabs - 1 && $key !== $app_strings['LBL_TABGROUP_ALL'] && in_array(
+                        $tabGroup['modules'][$moduleTab],
+                        $tabGroup['extra']
+                    )
                 ) {
                     unset($groupTabs[$key]['modules'][$moduleTab]);
                 }
@@ -927,7 +931,8 @@ EOHTML;
             echo '<script>jscal_today = 1000*' .
                 $timedate->asUserTs($timedate->getNow()) .
                 '; if(typeof app_strings == "undefined") app_strings = new Array();</script>';
-            if (!is_file(sugar_cached("include/javascript/sugar_grp1.js")) ||
+            if (
+                !is_file(sugar_cached("include/javascript/sugar_grp1.js")) ||
                 !is_file(sugar_cached("include/javascript/sugar_grp1_yui.js")) ||
                 !is_file(sugar_cached("include/javascript/sugar_grp1_jquery.js"))
             ) {
@@ -949,7 +954,7 @@ EOHTML;
             if ($this->hasDomJS()) {
                 echo "
                         <script type='text/javascript'>
-                        SUGAR.append(SUGAR, { settings:".$this->getDomJS()." } );
+                        SUGAR.append(SUGAR, { settings:" . $this->getDomJS() . " } );
                         </script>
                         ";
             }
@@ -1168,7 +1173,8 @@ EOHTML;
      */
     protected function _displaySubPanels()
     {
-        if (isset($this->bean) &&
+        if (
+            isset($this->bean) &&
             !empty($this->bean->id) &&
             (file_exists('modules/' . $this->module . '/metadata/subpaneldefs.php') ||
                 file_exists('custom/modules/' . $this->module . '/metadata/subpaneldefs.php') ||
@@ -1270,7 +1276,7 @@ EOHTML;
             number_format(round($deltaTime, 2), 2) .
             ' ' .
             $GLOBALS['app_strings']['LBL_SERVER_RESPONSE_TIME_SECONDS'];
-        $return = $response_time_string. '<br />';
+        $return = $response_time_string . '<br />';
 
         if (!empty($GLOBALS['sugar_config']['show_page_resources'])) {
             // Print out the resources used in constructing the page.
@@ -1383,7 +1389,8 @@ EOHTML;
         if (file_exists('custom/modules/' . $module . '/Ext/Menus/menu.ext.php')) {
             require('custom/modules/' . $module . '/Ext/Menus/menu.ext.php');
         }
-        if (!file_exists(get_custom_file_if_exists('modules/' . $module . '/Menu.php')) &&
+        if (
+            !file_exists(get_custom_file_if_exists('modules/' . $module . '/Menu.php')) &&
             !file_exists('custom/modules/' . $module . '/Ext/Menus/menu.ext.php') &&
             !empty($GLOBALS['mod_strings']['LNK_NEW_RECORD'])
         ) {
@@ -1586,7 +1593,8 @@ EOHTML;
         if (isset($this->action)) {
             switch ($this->action) {
                 case 'EditView':
-                    if (!empty($this->bean->id) &&
+                    if (
+                        !empty($this->bean->id) &&
                         (empty($_REQUEST['isDuplicate']) || $_REQUEST['isDuplicate'] === 'false')
                     ) {
                         $params[] =
@@ -1805,7 +1813,8 @@ EOHTML;
             $favicon = $themeObject->getImageURL($this->module . '.gif', false);
         }
         if (!is_file($favicon) || !$module_favicon) {
-            $favicon = $themeObject->getImageURL('sugar_icon.ico', false);
+            //non-upgrade safe change by TC
+            $favicon = $themeObject->getImageURL('sugar_icons.ico', false);
         }
 
         $extension = pathinfo($favicon, PATHINFO_EXTENSION);
@@ -1894,7 +1903,8 @@ EOHTML;
     {
         //if the referrer is post, and the post array is empty, then an error has occurred, most likely
         //while uploading a file that exceeds the post_max_size.
-        if (empty($_FILES) &&
+        if (
+            empty($_FILES) &&
             empty($_POST) &&
             isset($_SERVER['REQUEST_METHOD']) &&
             strtolower($_SERVER['REQUEST_METHOD']) == 'post'
